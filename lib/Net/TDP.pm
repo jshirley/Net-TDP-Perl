@@ -50,11 +50,18 @@ has 'api_key' => (
 
   foreach my $read_method ( qw/list_goals list_categories archive_goal/ ) {
     *{$read_method} = sub {
-      my $self = shift;
+      my ( $self, @args ) = @_;
       try {
-        $self->_spore->$read_method(@_)->body;
+        $self->_spore->$read_method(@args)->body;
       } catch {
-        Carp::croak "The TDP webservice responded with an error: $_";
+        my $err = "The TDP webservice responded with an error:";
+        if ( ref $_ and $_->isa('Net::HTTP::Spore::Response') ) {
+          $err .= "\n" . $_->body->{error};
+        }
+        else {
+          $err .= "\n$_";
+        }
+        Carp::croak $err;
       };
     };
   }

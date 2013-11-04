@@ -54,7 +54,7 @@ if ( $id ) {
     duration => 45
   );
 
-  if ( $autoclean ) {
+  if ( $autoclean and $id ) {
     print "Archiving goal $id\n";
     p $tdp->archive_goal(id => $id);
   }
