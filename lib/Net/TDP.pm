@@ -3,6 +3,8 @@ package Net::TDP;
 use Moose;
 
 use Net::HTTP::Spore;
+use Try::Tiny;
+use Carp;
 
 # ABSTRACT: Perl access to the TDP.me API
 
@@ -48,7 +50,12 @@ has 'api_key' => (
 
   foreach my $read_method ( qw/list_goals list_categories archive_goal/ ) {
     *{$read_method} = sub {
-      shift->_spore->$read_method(@_)->body;
+      my $self = shift;
+      try {
+        $self->_spore->$read_method(@_)->body;
+      } catch {
+        Carp::croak "The TDP webservice responded with an error: $_";
+      };
     };
   }
 }
@@ -117,7 +124,7 @@ sub _build_spec {
                 "api_format"      : [ "json" ],
                 "path"            : "/goals/:id/completion",
                 "method"          : "POST",
-                "expected_status" : [ 201, 400 ],
+                "expected_status" : [ 202, 400 ],
                 "description"     : "Mark a goal as completed",
                 "authentication"  : true,
                 "requires_params" : [ "id" ],
