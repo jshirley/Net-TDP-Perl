@@ -4,6 +4,8 @@ use Moose;
 
 use Net::HTTP::Spore;
 
+# ABSTRACT: Perl access to the TDP.me API
+
 has '_spec' => (
     is      => 'rw',
     isa     => 'Str',
