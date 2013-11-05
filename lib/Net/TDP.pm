@@ -48,7 +48,7 @@ has 'api_key' => (
     };
   }
 
-  foreach my $read_method ( qw/list_goals list_categories archive_goal/ ) {
+  foreach my $read_method ( qw/list_goals list_categories archive_goal overview report_by_day/ ) {
     *{$read_method} = sub {
       my ( $self, @args ) = @_;
       try {
@@ -99,6 +99,22 @@ sub _build_spec {
                 "method"          : "GET",
                 "expected_status" : [ 200 ],
                 "description"     : "Fetch all categories",
+                "authentication"  : true
+            },
+            "overview" : {
+                "api_format"      : [ "json" ],
+                "path"            : "/report/stats",
+                "method"          : "GET",
+                "expected_status" : [ 200 ],
+                "description"     : "Report high level attributes on the account",
+                "authentication"  : true
+            },
+            "report_by_day" : {
+                "api_format"      : [ "json" ],
+                "path"            : "/report/by_day",
+                "method"          : "GET",
+                "expected_status" : [ 200 ],
+                "description"     : "Return a list of activity grouped by day",
                 "authentication"  : true
             },
             "list_goals" : {
