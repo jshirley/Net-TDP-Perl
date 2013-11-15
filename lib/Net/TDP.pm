@@ -42,13 +42,13 @@ has 'api_key' => (
 
 {
   no strict 'refs';
-  foreach my $write_method ( qw/create_goal completed/) {
+  foreach my $write_method ( qw/create_goal completed add_tag/) {
     *{$write_method} = sub {
         shift->_spore->$write_method( @_, payload => { @_ } )->body;
     };
   }
 
-  foreach my $read_method ( qw/list_goals list_categories archive_goal overview report_by_day/ ) {
+  foreach my $read_method ( qw/list_goals list_categories archive_goal overview report_by_day get_tags delete_tag/ ) {
     *{$read_method} = sub {
       my ( $self, @args ) = @_;
       try {
@@ -162,6 +162,36 @@ sub _build_spec {
                 "authentication"  : true,
                 "requires_params" : [ "id" ],
                 "optional_params" : [ "permanent" ]
+            },
+            "get_tags" : {
+                "api_format"      : [ "json" ],
+                "path"            : "/goals/:id/tags",
+                "method"          : "GET",
+                "expected_status" : [ 200 ],
+                "description"     : "Fetch tags on a goal",
+                "authentication"  : true,
+                "requires_params" : [ "id" ],
+                "optional_params" : [ ]
+            },
+            "add_tag" : {
+                "api_format"      : [ "json" ],
+                "path"            : "/goals/:id/tags",
+                "method"          : "POST",
+                "expected_status" : [ 201, 202, 400 ],
+                "description"     : "Add a tag to a goal",
+                "authentication"  : true,
+                "requires_params" : [ "id", "tag" ],
+                "optional_params" : [ ]
+            },
+            "remove_tag" : {
+                "api_format"      : [ "json" ],
+                "path"            : "/goals/:id/tags/:tag_id",
+                "method"          : "DELETE",
+                "expected_status" : [ 202 ],
+                "description"     : "Removes a tag on a goal",
+                "authentication"  : true,
+                "requires_params" : [ "id", "tag_id" ],
+                "optional_params" : [ ]
             }
         }
     });
