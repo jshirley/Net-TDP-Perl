@@ -42,7 +42,7 @@ has 'api_key' => (
 
 {
   no strict 'refs';
-  foreach my $write_method ( qw/create_goal completed add_tag/) {
+  foreach my $write_method ( qw/create_goal completed add_tag edit_completed remove_completion/) {
     *{$write_method} = sub {
         shift->_spore->$write_method( @_, payload => { @_ } )->body;
     };
@@ -192,6 +192,45 @@ sub _build_spec {
                 "authentication"  : true,
                 "requires_params" : [ "id", "tag_id" ],
                 "optional_params" : [ ]
+            },
+            "edit_completed" : {
+              "requires_params" : [
+                  "goal_id", "id"
+              ],
+              "expected_status" : [
+                  202,
+                  400
+              ],
+              "optional_params" : [
+                  "date",
+                  "note",
+                  "quantity",
+                  "duration",
+                  "vacation"
+              ],
+              "api_format" : [
+                  "json"
+              ],
+              "method" : "PUT",
+              "path" : "/goals/:goal_id/completion/:id",
+              "authentication" : true,
+              "description" : "Edit a completion record"
+            },
+            "remove_completion" : {
+              "requires_params" : [
+                "goal_id", "id"
+              ],
+              "expected_status" : [
+                202,
+                400
+              ],
+              "api_format" : [
+                "json"
+              ],
+              "method" : "DELETE",
+              "path" : "/goals/:goal_id/completion/:id",
+              "authentication" : true,
+              "description" : "Remove a completion record"
             }
         }
     });
