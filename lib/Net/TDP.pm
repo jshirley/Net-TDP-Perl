@@ -91,7 +91,7 @@ sub _build_spec {
         "version"      : "v1",
         "name"         : "tdp.me",
         "author"       : [ "J. Shirley <jshirley@tdp.me>" ],
-        "meta"         : { "documentation" : "http://tech.tdp.me/clients/perl" },
+        "meta"         : { "documentation" : "http://tdp.me/account/api" },
         "methods"      : {
             "list_categories" : {
                 "api_format"      : [ "json" ],
@@ -151,7 +151,7 @@ sub _build_spec {
                 "description"     : "Mark a goal as completed",
                 "authentication"  : true,
                 "requires_params" : [ "id" ],
-                "optional_params" : [ "date", "note", "quantity", "duration" ]
+                "optional_params" : [ "date", "note", "quantity", "duration", "vacation" ]
             },
             "archive_goal" : {
                 "api_format"      : [ "json" ],
